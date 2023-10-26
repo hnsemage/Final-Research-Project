@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 
 
+
 const dropdownBackgroundColor = '#25274D';
 
 const BlackMenuItem = styled(MenuItem)({
@@ -19,10 +20,10 @@ const BlackMenuItem = styled(MenuItem)({
   
 });
 
-const Home = () => {
+const HomeLogin = () => {
 
   const navigate = useNavigate();
-  
+  const phoneNumber = localStorage.getItem("phone_number");
 
   const [type01, setType01] = useState("");
   const [value01, setValue01] = useState("");
@@ -112,16 +113,18 @@ const Home = () => {
 
       // Send a POST request to your backend endpoint
       axios
-      .post("http://localhost:5000/predict", dataToSend, {
-        headers: {'Content-Type': 'application/json',},
-      })
-      .then((response) => {
-        console.log(response.data);
-        navigate('/info');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  .post(`http://localhost:5000/predictlogin/${phoneNumber}`, dataToSend, {
+    headers: { 'Content-Type': 'application/json' },
+  })
+  .then((response) => {
+    console.log(response.data);
+    navigate(`/infologin`);
+
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
     }
 
     event.preventDefault();
@@ -236,35 +239,24 @@ const Home = () => {
             </div>
             <br />
           </Box>
-          <Box display="flex" justifyContent="space-between">
-  <Box>
-    <Box textAlign="left"> {/* Align to the left */}
-    
-      <Link to="/login" style={{ textDecoration: "none" }}>
-        <Button
-          variant="contained"
-          sx={{ width: "18ch", backgroundColor: "#BADFE7", color: "black", fontWeight: "bold", fontFamily: "Inika", fontSize: 18 }}>
-          Go to Login
-        </Button>
-      </Link><br/><br/>
-      <Typography variant="h3" style={{ fontFamily: "Inika", fontSize: 15, color: "#e6f1f6" }} component="div" gutterBottom>
-      To see your past records, Login...
-    </Typography>
-    </Box>
-  </Box>
-  <Box>
-    <Button variant="contained" type="submit" onClick={handleAdd}
-      sx={{ width: "20ch", backgroundColor: "#BADFE7", color: "black", fontWeight: "bold", fontFamily: "Inika", fontSize: 20 }}>
-      Submit
-    </Button>
-  </Box>
-</Box>
-
-          
+          <Box textAlign={"center"}>
+            
+              <Button variant="contained" type="submit" onClick={handleAdd}
+                sx={{ width: "20ch", backgroundColor: "#BADFE7", color: "black", fontWeight: "bold", fontFamily: "Inika", fontSize: 20 ,m: 3}}>
+                  Submit
+              </Button>
+              
+              
+              <Button variant="contained" type="submit" onClick={() => navigate(`/user-profile}`)}
+                sx={{ width: "20ch", backgroundColor: "#BADFE7", color: "black", fontWeight: "bold", fontFamily: "Inika", fontSize: 20,m: 3 }}>
+                  Back
+              </Button>
+            
+          </Box>   
         </form>
       </Container>
     </div>
   );
 };
 
-export default Home;
+export default HomeLogin;

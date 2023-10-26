@@ -5,14 +5,15 @@ import { Table,  TableBody, TableRow, TableCell } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 
 
-function Information(){
+function InformationLogin(){
     const navigate = useNavigate();
+    const phoneNumber = localStorage.getItem("phone_number");
 
     const [data, setData] = useState({});
 
     useEffect(() =>{
         //Make an HTTP GET request to your Flask backend when the component mounts
-        axios.get('http://localhost:5000/predict')
+        axios.get(`http://localhost:5000/predictlogin/${phoneNumber}`)
             .then((response)=>{
                 setData(response.data);
             })
@@ -122,7 +123,7 @@ function Information(){
       <Button
           variant="contained"
           color="primary"
-          onClick={() => navigate('/')}
+          onClick={() => navigate(`/user-profile`)}
           sx={{
             m: 3,
             width: "20ch",
@@ -142,4 +143,4 @@ function Information(){
 }
 
 
-export default Information;
+export default InformationLogin;
