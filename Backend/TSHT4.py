@@ -1,6 +1,4 @@
-import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split, learning_curve
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
@@ -8,49 +6,12 @@ from sklearn.metrics import accuracy_score
 import db_connection
 
 # Establish a database connection
-client, db, collection = db_connection.connect_to_database()
+client, db, collection, users_collection, records_collection = db_connection.connect_to_database()
 
 # Check if the database connection was successful
 if client is None or db is None or collection is None:
     print("Exiting the script.")
     exit()
-
-
-def plot_learning_curve(estimator, X, y, cv, train_sizes=np.linspace(0.1, 1.0, 5)):
-    train_sizes, train_scores, test_scores = learning_curve(
-        estimator, X, y, cv=cv, train_sizes=train_sizes, scoring="accuracy"
-    )
-    train_scores_mean = np.mean(train_scores, axis=1)
-    train_scores_std = np.std(train_scores, axis=1)
-    test_scores_mean = np.mean(test_scores, axis=1)
-    test_scores_std = np.std(test_scores, axis=1)
-
-    plt.figure(figsize=(8, 6))
-    plt.title("Learning Curve")
-    plt.xlabel("Training Examples")
-    plt.ylabel("Score")
-    plt.grid()
-
-    plt.fill_between(
-        train_sizes,
-        train_scores_mean - train_scores_std,
-        train_scores_mean + train_scores_std,
-        alpha=0.1,
-        color="r",
-    )
-    plt.fill_between(
-        train_sizes,
-        test_scores_mean - test_scores_std,
-        test_scores_mean + test_scores_std,
-        alpha=0.1,
-        color="g",
-    )
-
-    plt.plot(train_sizes, train_scores_mean, "o-", color="r", label="Training Score")
-    plt.plot(train_sizes, test_scores_mean, "o-", color="g", label="Cross-Validation Score")
-
-    plt.legend(loc="best")
-    plt.show()
 
 
 def tsh_t4_summarize(user_TSH, user_T4, report_TSH, report_T4):
@@ -141,7 +102,7 @@ def tsh_t4_summarize(user_TSH, user_T4, report_TSH, report_T4):
             matching_record = record
             break
     matching_info = {
-        "About your reports": None,
+        "About Your Reports": None,
         "Precautions": None,
         "Risks": None,
         "Symptoms": None,
@@ -156,16 +117,16 @@ def tsh_t4_summarize(user_TSH, user_T4, report_TSH, report_T4):
             description_points = description.split('.' or '.')
             for point in description_points:
                 if not description_printed:
-                    print("About your reports:")
+                    print("About Your Reports:")
                     description_printed = True
-                print(f"- {point.strip()}")  # Trim spaces around each point
-                matching_info["About your reports"] = description_points
+                # print(f"- {point.strip()}")  # Trim spaces around each point
+                matching_info["About Your Reports"] = description_points
 
         else:
             if not description_printed:
-                print(f"About your reports: {description.strip()}")  # Treat as a single precaution
+                # print(f"Description: {description.strip()}")  # Treat as a single precaution
                 description_points = [description.strip()]
-                matching_info["About your reports"] = description_points
+                matching_info["About Your Reports"] = description_points
                 description_printed = True
 
         # Split the precautions string by commas and print each point on a separate line
@@ -174,13 +135,13 @@ def tsh_t4_summarize(user_TSH, user_T4, report_TSH, report_T4):
             precautions_points = precautions.split(',' or '.')
             for point in precautions_points:
                 if not precautions_printed:
-                    print("Precautions:")
+                    # print("Precautions:")
                     precautions_printed = True
-                print(f"- {point.strip()}")  # Trim spaces around each point
+                # print(f"- {point.strip()}")  # Trim spaces around each point
                 matching_info["Precautions"] = precautions_points
         else:
             if not precautions_printed:
-                print(f"Precautions: {precautions.strip()}")  # Treat as a single precaution
+                # print(f"Precautions: {precautions.strip()}")  # Treat as a single precaution
                 precautions_points = [precautions.strip()]
                 matching_info["Precautions"] = precautions_points
                 precautions_printed = True
@@ -191,13 +152,13 @@ def tsh_t4_summarize(user_TSH, user_T4, report_TSH, report_T4):
             risk_points = risk.split(',' or '.')
             for point in risk_points:
                 if not risks_printed:
-                    print("Risks:")
+                    # print("Risks:")
                     risks_printed = True
-                print(f"- {point.strip()}")  # Trim spaces around each point
+                # print(f"- {point.strip()}")  # Trim spaces around each point
                 matching_info["Risks"] = risk_points
         else:
             if not risks_printed:
-                print(f"Risks: {risk.strip()}")  # Treat as a single risk point
+                # print(f"Risks: {risk.strip()}")  # Treat as a single risk point
                 risk_points = [risk.strip()]
                 matching_info["Risks"] = risk_points
                 risks_printed = True
@@ -208,13 +169,13 @@ def tsh_t4_summarize(user_TSH, user_T4, report_TSH, report_T4):
             symptoms_points = symptoms.split(',' or '.')
             for point in symptoms_points:
                 if not symptoms_printed:
-                    print("Symptoms:")
+                    # print("Symptoms:")
                     symptoms_printed = True
-                print(f"- {point.strip()}")  # Trim spaces around each point
+                # print(f"- {point.strip()}")  # Trim spaces around each point
                 matching_info["Symptoms"] = symptoms_points
         else:
             if not symptoms_printed:
-                print(f"Symptoms: {symptoms.strip()}")  # Treat as a single symptom
+                # print(f"Symptoms: {symptoms.strip()}")  # Treat as a single symptom
                 symptoms_points = [symptoms.strip()]
                 matching_info["Symptoms"] = symptoms_points
                 symptoms_printed = True
@@ -231,7 +192,7 @@ def tsh_t4_summarize(user_TSH, user_T4, report_TSH, report_T4):
                 matching_info["Learn More About Your Reports"] = links_points
         else:
             if not symptoms_printed:
-                print(f"Learn More About Your Reports: {symptoms.strip()}")  # Treat as a single symptom
+                # print(f"Learn More About Your Reports: {symptoms.strip()}")  # Treat as a single symptom
                 links_points = [symptoms.strip()]
                 matching_info["Learn More About Your Reports"] = links_points
                 links_printed = True
@@ -239,12 +200,9 @@ def tsh_t4_summarize(user_TSH, user_T4, report_TSH, report_T4):
     else:
         print("No matching record found for the predicted category.")
 
-        # Plot the learning curve
-    plot_learning_curve(model, x, y, cv=5)
-
     return predicted_category[0], database_info, matching_info
 
 
-# This function handles when the user input T4 first and then TSH
+# This function handles when the user input PPBS first and then HBA1C
 def t4_tsh_summarize(user_T4, user_TSH, report_T4, report_TSH):
     return tsh_t4_summarize(user_TSH, user_T4, report_TSH, report_T4)

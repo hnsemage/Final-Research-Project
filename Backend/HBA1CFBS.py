@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 import db_connection
 
 # Establish a database connection
-client, db, collection = db_connection.connect_to_database()
+client, db, collection, users_collection,records_collection = db_connection.connect_to_database()
 
 # Check if the database connection was successful
 if client is None or db is None or collection is None:

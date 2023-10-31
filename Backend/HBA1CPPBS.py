@@ -1,6 +1,4 @@
-import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split, learning_curve
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
@@ -8,49 +6,12 @@ from sklearn.metrics import accuracy_score
 import db_connection
 
 # Establish a database connection
-client, db, collection = db_connection.connect_to_database()
+client, db, collection, users_collection, records_collection = db_connection.connect_to_database()
 
 # Check if the database connection was successful
 if client is None or db is None or collection is None:
     print("Exiting the script.")
     exit()
-
-
-def plot_learning_curve(estimator, X, y, cv, train_sizes=np.linspace(0.1, 1.0, 5)):
-    train_sizes, train_scores, test_scores = learning_curve(
-        estimator, X, y, cv=cv, train_sizes=train_sizes, scoring="accuracy"
-    )
-    train_scores_mean = np.mean(train_scores, axis=1)
-    train_scores_std = np.std(train_scores, axis=1)
-    test_scores_mean = np.mean(test_scores, axis=1)
-    test_scores_std = np.std(test_scores, axis=1)
-
-    plt.figure(figsize=(8, 6))
-    plt.title("Learning Curve")
-    plt.xlabel("Training Examples")
-    plt.ylabel("Score")
-    plt.grid()
-
-    plt.fill_between(
-        train_sizes,
-        train_scores_mean - train_scores_std,
-        train_scores_mean + train_scores_std,
-        alpha=0.1,
-        color="r",
-    )
-    plt.fill_between(
-        train_sizes,
-        test_scores_mean - test_scores_std,
-        test_scores_mean + test_scores_std,
-        alpha=0.1,
-        color="g",
-    )
-
-    plt.plot(train_sizes, train_scores_mean, "o-", color="r", label="Training Score")
-    plt.plot(train_sizes, test_scores_mean, "o-", color="g", label="Cross-Validation Score")
-
-    plt.legend(loc="best")
-    plt.show()
 
 
 def hba1c_ppbs_summarize(user_HBA1C, user_PPBS, report_HBA1C, report_PPBS):
@@ -238,9 +199,6 @@ def hba1c_ppbs_summarize(user_HBA1C, user_PPBS, report_HBA1C, report_PPBS):
 
     else:
         print("No matching record found for the predicted category.")
-
-        # Plot the learning curve
-        plot_learning_curve(model, x, y, cv=5)
 
     return predicted_category[0], database_info, matching_info
 
