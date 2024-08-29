@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Paper,Button, Typography, Box, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, } from '@mui/material';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-import {Link} from 'react-router-dom';
 
 // Define a CSS class to remove borders
 const noBorder = {
@@ -49,7 +47,7 @@ const UserProfile = () => {
       };
   
       fetchUserData();
-    }, []);
+    }, [phoneNumber]);
   return (
     <Container>
       <Box textAlign="center">
